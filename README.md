@@ -9,7 +9,7 @@ nyawa (hearts), dan lencana.
 
 > **Status: Minimum Viable Product (MVP) / prototipe demo.**
 
-<!-- 🔗 **Coba langsung:** https://<username>.github.io/<nama-repo>/ -->
+🔗 **Coba langsung:** https://galihwwm.github.io/Kobo-v1/
 
 ---
 
