@@ -1,4 +1,4 @@
-# KOBO — Belajar Koperasi Bareng Bao di Kerbau
+# KOBO — Belajar Koperasi Bareng Bao si Kerbau
 
 Aplikasi gamifikasi literasi koperasi yang dikembangkan untuk
 **Hackathon Digital Cooperatives Expo 2026 — Pilar 4: Literasi Gen-Z & Gen-Alpha dalam Berkoperasi**.
