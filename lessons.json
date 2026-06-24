@@ -1,0 +1,226 @@
+[
+  {
+    "id": "u1",
+    "title": "Kenalan sama Koperasi",
+    "icon": "👋",
+    "questions": [
+      {
+        "type": "mc",
+        "prompt": "Apa sih koperasi itu?",
+        "hint": "Pilih definisi yang paling pas.",
+        "bubble": "Halo! Aku Bao si Kerbau. Kita mulai dari dasar ya!",
+        "options": [
+          "Badan usaha yang dimiliki & dijalankan bersama oleh anggotanya",
+          "Toko milik satu orang kaya di desa",
+          "Bank milik pemerintah pusat",
+          "Aplikasi belanja online"
+        ],
+        "answer": 0,
+        "explain": "Koperasi dimiliki dan dikelola bersama oleh para anggotanya untuk kesejahteraan bersama."
+      },
+      {
+        "type": "tf",
+        "prompt": "Benar atau salah?",
+        "statement": "Di koperasi, setiap anggota punya 1 suara, tidak peduli besar simpanannya.",
+        "bubble": "Ini prinsip penting koperasi lho!",
+        "answer": true,
+        "explain": "Betul. Prinsip 'satu anggota satu suara' membedakan koperasi dari PT yang suaranya tergantung jumlah saham."
+      },
+      {
+        "type": "mc",
+        "prompt": "Tujuan utama koperasi adalah...",
+        "hint": "Fokus pada siapa yang diuntungkan.",
+        "options": [
+          "Menyejahterakan anggota dan masyarakat",
+          "Mengejar keuntungan sebesar-besarnya untuk pemilik tunggal",
+          "Mengalahkan koperasi lain",
+          "Menaikkan harga barang"
+        ],
+        "answer": 0,
+        "explain": "Koperasi berorientasi pada kesejahteraan anggota, bukan menumpuk laba untuk segelintir pemilik."
+      },
+      {
+        "type": "match",
+        "prompt": "Pasangkan istilah dengan artinya",
+        "bubble": "Ketuk kiri lalu pasangannya di kanan 🔗",
+        "pairs": [
+          {
+            "l": "Anggota",
+            "r": "Pemilik sekaligus pengguna koperasi"
+          },
+          {
+            "l": "Pengurus",
+            "r": "Yang menjalankan koperasi sehari-hari"
+          },
+          {
+            "l": "Rapat Anggota",
+            "r": "Pemegang kekuasaan tertinggi"
+          }
+        ],
+        "explain": "Rapat Anggota adalah forum tertinggi pengambilan keputusan di koperasi."
+      }
+    ]
+  },
+  {
+    "id": "u2",
+    "title": "Simpanan & Modal",
+    "icon": "🐷",
+    "questions": [
+      {
+        "type": "mc",
+        "prompt": "Simpanan yang dibayar SEKALI saat pertama jadi anggota disebut...",
+        "hint": "Sekali di awal, jadi 'tanda masuk'.",
+        "bubble": "Ada 3 jenis simpanan utama. Yuk hafalkan!",
+        "options": [
+          "Simpanan pokok",
+          "Simpanan wajib",
+          "Simpanan sukarela",
+          "Simpanan deposito"
+        ],
+        "answer": 0,
+        "explain": "Simpanan pokok dibayar sekali saat mendaftar dan tidak bisa diambil selama jadi anggota."
+      },
+      {
+        "type": "mc",
+        "prompt": "Simpanan yang dibayar RUTIN tiap periode disebut...",
+        "options": [
+          "Simpanan wajib",
+          "Simpanan pokok",
+          "Simpanan hari raya",
+          "Simpanan emas"
+        ],
+        "answer": 0,
+        "explain": "Simpanan wajib dibayar berkala (mis. bulanan) oleh setiap anggota."
+      },
+      {
+        "type": "tf",
+        "prompt": "Benar atau salah?",
+        "statement": "Simpanan sukarela boleh diambil sewaktu-waktu sesuai aturan koperasi.",
+        "answer": true,
+        "explain": "Benar. Simpanan sukarela bersifat fleksibel, mirip tabungan biasa."
+      },
+      {
+        "type": "mc",
+        "prompt": "Modal koperasi yang berasal dari anggota disebut modal...",
+        "options": [
+          "Sendiri",
+          "Pinjaman",
+          "Asing",
+          "Hibah negara"
+        ],
+        "answer": 0,
+        "explain": "Modal sendiri bersumber dari simpanan anggota dan cadangan koperasi."
+      }
+    ]
+  },
+  {
+    "id": "u3",
+    "title": "Rahasia SHU",
+    "icon": "💰",
+    "questions": [
+      {
+        "type": "mc",
+        "prompt": "SHU adalah singkatan dari...",
+        "bubble": "Ini bagian yang ditunggu anggota tiap tahun 😄",
+        "options": [
+          "Sisa Hasil Usaha",
+          "Surat Hak Usaha",
+          "Simpanan Hasil Untung",
+          "Sistem Hitung Uang"
+        ],
+        "answer": 0,
+        "explain": "SHU = Sisa Hasil Usaha, yaitu keuntungan bersih koperasi dalam satu tahun buku."
+      },
+      {
+        "type": "tf",
+        "prompt": "Benar atau salah?",
+        "statement": "SHU dibagi berdasarkan jasa & partisipasi anggota, bukan sekadar besarnya modal.",
+        "answer": true,
+        "explain": "Benar. Anggota yang lebih aktif bertransaksi umumnya menerima SHU lebih besar — ini ciri khas koperasi."
+      },
+      {
+        "type": "mc",
+        "prompt": "Jika kamu rajin belanja di koperasi, dampaknya ke SHU-mu...",
+        "hint": "Partisipasi = porsi.",
+        "options": [
+          "Cenderung lebih besar",
+          "Lebih kecil",
+          "Tidak ada hubungannya",
+          "SHU jadi hangus"
+        ],
+        "answer": 0,
+        "explain": "Semakin besar partisipasi (transaksi) anggota, umumnya semakin besar bagian SHU-nya."
+      },
+      {
+        "type": "mc",
+        "prompt": "Forum yang mengesahkan pembagian SHU adalah...",
+        "options": [
+          "Rapat Anggota Tahunan (RAT)",
+          "Rapat RT",
+          "Sidang pengurus rahasia",
+          "Voting di media sosial"
+        ],
+        "answer": 0,
+        "explain": "RAT mengesahkan laporan keuangan dan pembagian SHU setiap tahun."
+      }
+    ]
+  },
+  {
+    "id": "u4",
+    "title": "Koperasi Zaman Now",
+    "icon": "🚀",
+    "questions": [
+      {
+        "type": "mc",
+        "prompt": "Manfaat digitalisasi koperasi untuk anggota muda adalah...",
+        "bubble": "Babak terakhir! Kamu hampir jadi Sahabat Koperasi 🏆",
+        "options": [
+          "Transaksi & cek simpanan lewat HP, transparan",
+          "Antri lebih lama",
+          "Tidak bisa lihat laporan",
+          "Harus datang ke kantor tiap hari"
+        ],
+        "answer": 0,
+        "explain": "Digitalisasi membuat koperasi transparan dan mudah diakses generasi muda."
+      },
+      {
+        "type": "tf",
+        "prompt": "Benar atau salah?",
+        "statement": "Koperasi modern bisa punya unit usaha digital seperti marketplace produk anggota.",
+        "answer": true,
+        "explain": "Benar. Banyak koperasi kini membuka kanal digital untuk memasarkan produk anggotanya."
+      },
+      {
+        "type": "match",
+        "prompt": "Pasangkan masalah dengan solusi digitalnya",
+        "pairs": [
+          {
+            "l": "Catatan manual hilang",
+            "r": "Pembukuan digital"
+          },
+          {
+            "l": "Susah lihat SHU",
+            "r": "Dashboard anggota online"
+          },
+          {
+            "l": "Produk sepi pembeli",
+            "r": "Marketplace koperasi"
+          }
+        ],
+        "explain": "Teknologi menjawab masalah klasik koperasi: pencatatan, transparansi, dan pemasaran."
+      },
+      {
+        "type": "mc",
+        "prompt": "Sikap Gen-Z ideal terhadap koperasi sebaiknya...",
+        "options": [
+          "Aktif jadi anggota & ikut mengawasi",
+          "Cuek karena kuno",
+          "Hanya menabung tanpa peduli",
+          "Menunggu orang lain bergerak"
+        ],
+        "answer": 0,
+        "explain": "Partisipasi aktif anak muda membuat koperasi tumbuh sehat dan transparan."
+      }
+    ]
+  }
+]

@@ -1,0 +1,108 @@
+[
+  {
+    "name": "KOPERASI UJI JSON",
+    "type": "Tes",
+    "area": "Dari file JSON",
+    "services": [
+      "bukti"
+    ],
+    "member": "tes",
+    "emoji": "🧪"
+  },
+  {
+    "name": "Koperasi Maju Bersama",
+    "type": "Konsumen",
+    "area": "Tebet, Jakarta Selatan",
+    "services": [
+      "Sembako murah",
+      "Simpan pinjam",
+      "SHU tahunan"
+    ],
+    "member": "Terbuka untuk umum",
+    "emoji": "🏪"
+  },
+  {
+    "name": "KSP Sejahtera Mandiri",
+    "type": "Simpan Pinjam",
+    "area": "Cawang, Jakarta Timur",
+    "services": [
+      "Tabungan anggota",
+      "Pinjaman modal usaha",
+      "Edukasi keuangan"
+    ],
+    "member": "Wajib simpanan pokok",
+    "emoji": "🐷"
+  },
+  {
+    "name": "Koperasi Tani Subur",
+    "type": "Produsen",
+    "area": "Bogor, Jawa Barat",
+    "services": [
+      "Pupuk & bibit",
+      "Pemasaran hasil tani",
+      "Gudang bersama"
+    ],
+    "member": "Petani & umum",
+    "emoji": "🌾"
+  },
+  {
+    "name": "Koperasi Digital Nusantara",
+    "type": "Jasa",
+    "area": "Online / Nasional",
+    "services": [
+      "Marketplace produk anggota",
+      "Dashboard SHU online",
+      "Kelas UMKM"
+    ],
+    "member": "Daftar via aplikasi",
+    "emoji": "💻"
+  },
+  {
+    "name": "Koperasi Karyawan Bahagia",
+    "type": "Konsumen",
+    "area": "Sudirman, Jakarta Pusat",
+    "services": [
+      "Toko karyawan",
+      "Cicilan ringan",
+      "Voucher belanja"
+    ],
+    "member": "Khusus karyawan",
+    "emoji": "👔"
+  },
+  {
+    "name": "Koperasi Wanita Berdaya",
+    "type": "Serba Usaha",
+    "area": "Depok, Jawa Barat",
+    "services": [
+      "Modal usaha mikro",
+      "Pelatihan keterampilan",
+      "Arisan produktif"
+    ],
+    "member": "Terbuka untuk wanita",
+    "emoji": "💪"
+  },
+  {
+    "name": "Koperasi Pemuda Kreatif",
+    "type": "Jasa",
+    "area": "Bandung, Jawa Barat",
+    "services": [
+      "Coworking",
+      "Pendanaan ide kreatif",
+      "Komunitas wirausaha"
+    ],
+    "member": "Anak muda 17-35 th",
+    "emoji": "🚀"
+  },
+  {
+    "name": "Koperasi Pasar Rakyat",
+    "type": "Konsumen",
+    "area": "Cikini, Jakarta Pusat",
+    "services": [
+      "Grosir murah",
+      "Timbangan jujur",
+      "Simpanan harian"
+    ],
+    "member": "Pedagang & umum",
+    "emoji": "🧺"
+  }
+]

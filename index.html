@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Kobo — Belajar Koperasi Sambil Main</title>
+<meta name="description" content="Aplikasi belajar literasi koperasi ala game untuk Gen-Z & Gen-Alpha. Dibuat untuk Digital Cooperatives Expo 2026." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FFF8EE;
+    --ink:#2B2118;
+    --paper:#FFFFFF;
+    --rattan:#C8772E;       /* terracotta-amber, "anyaman bambu" */
+    --rattan-dark:#A85E1E;
+    --leaf:#3FA34D;         /* hijau gotong royong */
+    --leaf-dark:#2E7D3A;
+    --sky:#2E86C1;
+    --sun:#F4B740;
+    --coral:#E5533C;
+    --soft:#F1E6D2;
+    --line:#E7D8BF;
+    --muted:#8A7B66;
+    --shadow:0 4px 0 rgba(43,33,24,.18);
+    --shadow-press:0 1px 0 rgba(43,33,24,.18);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:'Plus Jakarta Sans',system-ui,sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+    line-height:1.5;
+    overflow-x:hidden;
+  }
+  /* anyaman / woven background motif */
+  body::before{
+    content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.06;
+    background-image:
+      repeating-linear-gradient(45deg,var(--rattan) 0 8px,transparent 8px 16px),
+      repeating-linear-gradient(-45deg,var(--leaf) 0 8px,transparent 8px 16px);
+  }
+  .app{position:relative;z-index:1;max-width:520px;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column}
+  h1,h2,h3,.brand,.btn,.unit-title,.q-prompt{font-family:'Fredoka',system-ui,sans-serif}
+
+  /* ---------- TOP BAR ---------- */
+  .topbar{
+    position:sticky;top:0;z-index:20;background:var(--bg);
+    display:flex;align-items:center;justify-content:space-between;
+    padding:14px 18px;border-bottom:2px solid var(--line);
+  }
+  .brand{display:flex;align-items:center;gap:9px;font-weight:700;font-size:20px;letter-spacing:-.02em}
+  .brand .logo{
+    width:34px;height:34px;border-radius:11px;background:var(--rattan);
+    display:grid;place-items:center;box-shadow:var(--shadow);font-size:18px;
+  }
+  .stats{display:flex;gap:14px;align-items:center;font-weight:700;font-size:15px}
+  .stat{display:flex;align-items:center;gap:5px}
+  .stat .ico{font-size:17px}
+  .stat.streak{color:var(--rattan)}
+  .stat.xp{color:var(--sun)}
+  .stat.hearts{color:var(--coral)}
+
+  /* ---------- SCREENS ---------- */
+  .screen{flex:1;padding:22px 18px 110px;display:none;animation:fade .35s ease}
+  .screen.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+  /* ---------- HOME / PATH ---------- */
+  .hero{
+    background:linear-gradient(135deg,var(--rattan),var(--sun));
+    border-radius:22px;padding:20px 22px;color:#fff;box-shadow:var(--shadow);
+    position:relative;overflow:hidden;margin-bottom:8px;
+  }
+  .hero h2{font-size:23px;font-weight:600;line-height:1.15}
+  .hero p{font-size:14px;opacity:.95;margin-top:6px;max-width:80%}
+  .hero .mascot{position:absolute;right:-6px;bottom:-10px;font-size:74px;filter:drop-shadow(0 3px 0 rgba(0,0,0,.15))}
+  .progress-line{margin:16px 0 6px;display:flex;align-items:center;gap:10px}
+  .bar{flex:1;height:14px;border-radius:99px;background:var(--soft);overflow:hidden;border:2px solid var(--line)}
+  .bar > i{display:block;height:100%;background:var(--leaf);width:0;transition:width .5s ease;border-radius:99px}
+  .bar-label{font-size:13px;font-weight:700;color:var(--muted)}
+
+  .path{margin-top:18px;display:flex;flex-direction:column;gap:0;position:relative}
+  .node-row{display:flex;justify-content:center;position:relative;padding:9px 0}
+  .node-row:nth-child(odd){transform:translateX(-58px)}
+  .node-row:nth-child(even){transform:translateX(58px)}
+  .node{
+    width:78px;height:78px;border-radius:50%;border:none;cursor:pointer;
+    background:var(--leaf);box-shadow:0 6px 0 var(--leaf-dark);
+    display:grid;place-items:center;font-size:30px;color:#fff;
+    transition:transform .12s ease, box-shadow .12s ease;position:relative;
+  }
+  .node:active{transform:translateY(4px);box-shadow:0 2px 0 var(--leaf-dark)}
+  .node.locked{background:#D8CBB4;box-shadow:0 6px 0 #BCAE93;cursor:not-allowed;color:#fff}
+  .node.done{background:var(--sun);box-shadow:0 6px 0 #C9930E}
+  .node .cap{
+    position:absolute;white-space:nowrap;top:50%;transform:translateY(-50%);
+    font-family:'Plus Jakarta Sans';font-size:13px;font-weight:700;color:var(--ink);
+  }
+  .node-row:nth-child(odd) .cap{left:92px}
+  .node-row:nth-child(even) .cap{right:92px}
+  .node.current::after{
+    content:"MULAI";position:absolute;top:-30px;left:50%;transform:translateX(-50%);
+    background:var(--paper);color:var(--leaf-dark);font-family:'Fredoka';font-weight:600;
+    font-size:11px;padding:4px 10px;border-radius:8px;box-shadow:var(--shadow);border:2px solid var(--leaf);
+    animation:bob 1.1s ease-in-out infinite;
+  }
+  @keyframes bob{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-4px)}}
+
+  /* ---------- LESSON ---------- */
+  .lesson-top{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+  .close{background:none;border:none;font-size:26px;color:var(--muted);cursor:pointer;line-height:1}
+  .lbar{flex:1;height:16px;border-radius:99px;background:var(--soft);border:2px solid var(--line);overflow:hidden}
+  .lbar > i{display:block;height:100%;background:var(--leaf);width:0;transition:width .4s ease;border-radius:99px}
+  .mini-hearts{color:var(--coral);font-weight:700;display:flex;align-items:center;gap:4px}
+
+  .q-prompt{font-size:21px;font-weight:600;line-height:1.3;margin-bottom:6px}
+  .q-hint{color:var(--muted);font-size:14px;margin-bottom:18px}
+  .speech{
+    display:flex;gap:12px;align-items:flex-start;margin-bottom:20px;
+  }
+  .speech .ava{font-size:46px;flex:none}
+  .speech .bubble{
+    background:var(--paper);border:2px solid var(--line);border-radius:16px;border-top-left-radius:4px;
+    padding:12px 14px;font-size:15px;box-shadow:var(--shadow-press);
+  }
+  .options{display:flex;flex-direction:column;gap:11px}
+  .opt{
+    text-align:left;background:var(--paper);border:2px solid var(--line);border-bottom-width:4px;
+    border-radius:14px;padding:15px 16px;font-size:16px;font-weight:600;color:var(--ink);
+    cursor:pointer;transition:all .1s ease;font-family:'Plus Jakarta Sans';
+  }
+  .opt:hover{border-color:var(--rattan)}
+  .opt.sel{border-color:var(--sky);background:#EAF4FB}
+  .opt.correct{border-color:var(--leaf);background:#E8F6EA;color:var(--leaf-dark)}
+  .opt.wrong{border-color:var(--coral);background:#FBEAE7;color:var(--coral)}
+  .opt:disabled{cursor:default}
+
+  /* match pairs */
+  .match-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+  .match-col{display:flex;flex-direction:column;gap:11px}
+
+  .footer-cta{
+    position:fixed;bottom:0;left:0;right:0;z-index:30;
+    max-width:520px;margin:0 auto;padding:16px 18px;
+    background:var(--bg);border-top:2px solid var(--line);
+  }
+  .feedback{border-radius:14px;padding:13px 14px;margin-bottom:12px;font-weight:600;font-size:15px;display:none}
+  .feedback.ok{display:block;background:#E8F6EA;color:var(--leaf-dark)}
+  .feedback.no{display:block;background:#FBEAE7;color:var(--coral)}
+  .feedback small{display:block;font-weight:500;margin-top:4px;opacity:.9;font-size:13px}
+
+  .btn{
+    width:100%;border:none;border-radius:14px;padding:15px;font-size:17px;font-weight:600;
+    cursor:pointer;color:#fff;background:var(--leaf);box-shadow:0 4px 0 var(--leaf-dark);
+    transition:all .1s ease;font-family:'Fredoka';letter-spacing:.01em;
+  }
+  .btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--leaf-dark)}
+  .btn:disabled{background:#D8CBB4;box-shadow:0 4px 0 #BCAE93;cursor:not-allowed}
+  .btn.coral{background:var(--coral);box-shadow:0 4px 0 #B43A26}
+  .btn.ghost{background:var(--paper);color:var(--ink);box-shadow:0 4px 0 var(--line);border:2px solid var(--line)}
+
+  /* ---------- DONE / RESULT ---------- */
+  .result{text-align:center;padding-top:30px}
+  .result .big{font-size:80px;animation:pop .5s ease}
+  @keyframes pop{0%{transform:scale(0)}70%{transform:scale(1.15)}100%{transform:scale(1)}}
+  .result h2{font-size:28px;margin:10px 0 6px}
+  .result p{color:var(--muted);margin-bottom:24px}
+  .reward-row{display:flex;gap:12px;justify-content:center;margin-bottom:28px}
+  .reward{background:var(--paper);border:2px solid var(--line);border-radius:14px;padding:14px 18px;min-width:96px}
+  .reward .n{font-family:'Fredoka';font-size:24px;font-weight:700}
+  .reward.xp .n{color:var(--sun)}
+  .reward.acc .n{color:var(--leaf)}
+  .reward .l{font-size:12px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+
+  /* ---------- PROFILE ---------- */
+  .card{background:var(--paper);border:2px solid var(--line);border-radius:18px;padding:18px;margin-bottom:14px;box-shadow:var(--shadow-press)}
+  .profile-head{display:flex;align-items:center;gap:14px}
+  .profile-head .pic{width:64px;height:64px;border-radius:18px;background:var(--rattan);display:grid;place-items:center;font-size:34px;box-shadow:var(--shadow)}
+  .profile-head h2{font-size:22px}
+  .profile-head p{color:var(--muted);font-size:14px}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;text-align:center}
+  .grid3 .b{background:var(--soft);border-radius:12px;padding:12px 6px}
+  .grid3 .b .n{font-family:'Fredoka';font-size:22px;font-weight:700}
+  .grid3 .b .l{font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase}
+  .badges{display:flex;flex-wrap:wrap;gap:10px}
+  .badge{flex:none;width:62px;text-align:center;font-size:11px;color:var(--muted);font-weight:600}
+  .badge .ring{width:54px;height:54px;border-radius:50%;display:grid;place-items:center;font-size:26px;margin:0 auto 5px;background:var(--soft);border:2px dashed var(--line)}
+  .badge.unlocked .ring{background:linear-gradient(135deg,var(--sun),var(--rattan));border:none;box-shadow:var(--shadow)}
+  .badge.unlocked{color:var(--ink)}
+  .reset{background:none;border:none;color:var(--muted);font-size:13px;text-decoration:underline;cursor:pointer;display:block;margin:8px auto 0}
+
+  /* ---------- BOTTOM NAV ---------- */
+  .nav{
+    position:fixed;bottom:0;left:0;right:0;z-index:25;max-width:520px;margin:0 auto;
+    background:var(--paper);border-top:2px solid var(--line);
+    display:flex;justify-content:space-around;padding:8px 0 calc(8px + env(safe-area-inset-bottom));
+  }
+  .nav button{background:none;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;color:var(--muted);font-weight:700;font-size:11px;padding:6px 18px;border-radius:12px;font-family:'Plus Jakarta Sans'}
+  .nav button .ic{font-size:23px}
+  .nav button.on{color:var(--leaf-dark);background:#EAF6EC}
+  .nav.hidden{display:none}
+
+  .toast{
+    position:fixed;top:18px;left:50%;transform:translateX(-50%) translateY(-80px);
+    background:var(--ink);color:#fff;padding:11px 18px;border-radius:12px;font-weight:600;font-size:14px;
+    z-index:60;transition:transform .3s ease;box-shadow:0 6px 18px rgba(0,0,0,.25);max-width:90%;text-align:center;
+  }
+  .toast.show{transform:translateX(-50%) translateY(0)}
+
+  /* ---------- #1 BRIDGE + KATALOG KOPERASI ---------- */
+  .bridge{background:#EAF6EC;border:2px solid var(--leaf);border-radius:16px;padding:16px;margin:6px 0 18px;text-align:left}
+  .bridge-ico{font-size:30px;margin-bottom:4px}
+  .bridge-txt{display:flex;flex-direction:column;margin-bottom:12px}
+  .bridge-txt strong{font-family:'Fredoka';font-weight:600;font-size:16px;color:var(--leaf-dark)}
+  .bridge-txt span{font-size:13px;color:var(--muted);margin-top:2px}
+  .bridge-btn{margin:0}
+  .coop-head{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+  .coop-intro{color:var(--muted);font-size:14px;margin-bottom:14px}
+  .coop-search{width:100%;padding:13px 14px;border:2px solid var(--line);border-radius:14px;font-size:15px;font-family:'Plus Jakarta Sans';margin-bottom:16px;background:var(--paper);color:var(--ink)}
+  .coop-search:focus{outline:none;border-color:var(--rattan)}
+  .coop{background:var(--paper);border:2px solid var(--line);border-bottom-width:4px;border-radius:16px;padding:15px;margin-bottom:12px;display:flex;gap:13px;align-items:flex-start}
+  .coop .ce{font-size:34px;flex:none}
+  .coop .ci{flex:1;min-width:0}
+  .coop h4{font-family:'Fredoka';font-weight:600;font-size:17px;margin-bottom:2px}
+  .coop .meta{font-size:13px;color:var(--muted);margin-bottom:8px}
+  .coop .tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+  .coop .tag{font-size:11px;font-weight:600;background:var(--soft);color:var(--rattan-dark);padding:3px 9px;border-radius:99px}
+  .coop .member{font-size:12px;color:var(--leaf-dark);font-weight:600}
+  .coop-join{margin-top:9px;width:100%;padding:9px;border:none;border-radius:10px;background:var(--leaf);color:#fff;font-family:'Fredoka';font-weight:600;cursor:pointer;box-shadow:0 3px 0 var(--leaf-dark)}
+  .coop-join:active{transform:translateY(2px);box-shadow:0 1px 0 var(--leaf-dark)}
+  .coop-empty{text-align:center;color:var(--muted);padding:30px 10px}
+  .coop-note{font-size:12px;color:var(--muted);background:var(--soft);border-radius:12px;padding:12px;margin-top:6px;line-height:1.5}
+
+  /* ---------- #3 SERTIFIKAT ---------- */
+  .cert-card .cert-name{width:100%;padding:12px 13px;border:2px solid var(--line);border-radius:12px;font-size:15px;font-family:'Plus Jakarta Sans';margin-bottom:10px;background:var(--paper);color:var(--ink)}
+  .cert-card .cert-name:focus{outline:none;border-color:var(--rattan)}
+  .cert-card.locked{opacity:.6}
+  .cert-top{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+  .cert-wrap{background:var(--soft);border-radius:18px;padding:12px}
+
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+  @media(min-width:540px){body::before{opacity:.05}}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- TOP BAR -->
+  <header class="topbar" id="topbar">
+    <div class="brand"><span class="logo"><img src="img/Bao.png" class="bao bao-icon" style="width:28px;height:28px;object-fit:contain;display:inline-block;"></span> Kobo</div>
+    <div class="stats">
+      <span class="stat streak"><span class="ico">🔥</span><span id="s-streak">0</span></span>
+      <span class="stat xp"><span class="ico">⭐</span><span id="s-xp">0</span></span>
+      <span class="stat hearts"><span class="ico">❤️</span><span id="s-hearts">5</span></span>
+    </div>
+  </header>
+
+  <!-- ===== HOME ===== -->
+  <section class="screen active" id="screen-home">
+    <div class="hero">
+      <h2 id="hero-title">Yuk, jadi anggota koperasi cerdas!</h2>
+      <p id="hero-sub">Belajar koperasi 5 menit sehari. Kumpulkan XP, jaga streak.</p>
+      <div class="mascot"><img src="img/BaoSemangat.png" class="bao bao-icon" style="width:150px;height:150px;object-fit:contain;display:inline-block;">
+    </div>
+    <div class="progress-line">
+      <span class="bar-label">Progres</span>
+      <div class="bar"><i id="home-progress"></i></div>
+      <span class="bar-label" id="home-progress-txt">0%</span>
+    </div>
+    <div class="path" id="path"></div>
+  </section>
+
+  <!-- ===== LESSON ===== -->
+  <section class="screen" id="screen-lesson">
+    <div class="lesson-top">
+      <button class="close" id="lesson-quit" aria-label="Tutup">✕</button>
+      <div class="lbar"><i id="lesson-bar"></i></div>
+      <span class="mini-hearts">❤️ <span id="lesson-hearts">5</span></span>
+    </div>
+    <div id="q-area"></div>
+  </section>
+
+  <!-- ===== RESULT ===== -->
+  <section class="screen" id="screen-result">
+    <div class="result">
+      <div class="big" id="result-emoji">🎉</div>
+      <h2 id="result-title">Pelajaran selesai!</h2>
+      <p id="result-sub">Kerja bagus. Konsisten itu kunci.</p>
+      <div class="reward-row">
+        <div class="reward xp"><div class="n" id="result-xp">+0</div><div class="l">XP</div></div>
+        <div class="reward acc"><div class="n" id="result-acc">0%</div><div class="l">Akurasi</div></div>
+      </div>
+
+      <!-- #1 Jembatan ke aksi nyata -->
+      <div class="bridge" id="result-bridge">
+        <div class="bridge-ico">📍</div>
+        <div class="bridge-txt">
+          <strong id="bridge-title">Siap mempraktikkan ilmunya?</strong>
+          <span id="bridge-sub">Temukan koperasi sungguhan di dekatmu dan ikut bergabung.</span>
+        </div>
+        <button class="btn ghost bridge-btn" id="result-find">Cari koperasi terdekat →</button>
+      </div>
+
+      <button class="btn" id="result-continue">Lanjut</button>
+    </div>
+  </section>
+
+  <!-- ===== KATALOG KOPERASI (#1) ===== -->
+  <section class="screen" id="screen-coops">
+    <div class="coop-head">
+      <button class="close" id="coops-back" aria-label="Kembali">←</button>
+      <h2 style="font-family:'Fredoka';font-weight:600;font-size:21px">Koperasi di dekatmu</h2>
+    </div>
+    <p class="coop-intro">Dari belajar, kini ke aksi nyata. Daftar contoh koperasi di bawah — cari yang cocok lalu bergabung.</p>
+    <input class="coop-search" id="coop-search" type="text" placeholder="🔎 Cari nama, jenis, atau lokasi…" />
+    <div id="coop-list"></div>
+    <p class="coop-note">⚠️ Data koperasi di sini masih <b>contoh (dummy)</b> untuk demo. Versi produksi akan terhubung ke data koperasi resmi & terverifikasi.</p>
+  </section>
+
+  <!-- ===== PROFILE ===== -->
+  <section class="screen" id="screen-profile">
+    <div class="card profile-head">
+      <div class="pic"><img src="BaoTabungan.png" class="bao bao-icon" style="width:60px;height:60px;object-fit:contain;display:inline-block;"></div>
+      <div>
+        <h2>Sahabat Koperasi</h2>
+        <p id="prof-rank">Tingkat: Pemula</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="grid3">
+        <div class="b"><div class="n" id="p-streak" style="color:var(--rattan)">0</div><div class="l">🔥 Streak</div></div>
+        <div class="b"><div class="n" id="p-xp" style="color:var(--sun)">0</div><div class="l">⭐ Total XP</div></div>
+        <div class="b"><div class="n" id="p-done" style="color:var(--leaf)">0</div><div class="l">✅ Selesai</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <h3 style="font-family:'Fredoka';margin-bottom:14px;font-weight:600">Lencana</h3>
+      <div class="badges" id="badges"></div>
+    </div>
+
+    <!-- #3 Sertifikat -->
+    <div class="card cert-card" id="cert-card">
+      <h3 style="font-family:'Fredoka';margin-bottom:6px;font-weight:600">🎓 Sertifikat Kelulusan</h3>
+      <p id="cert-status" style="color:var(--muted);font-size:14px;margin-bottom:14px"></p>
+      <input class="cert-name" id="cert-name" type="text" maxlength="28" placeholder="Tulis namamu di sertifikat…" />
+      <button class="btn" id="cert-make" disabled>Buat sertifikat</button>
+    </div>
+
+    <button class="reset" id="reset-btn">Reset semua progres</button>
+  </section>
+
+  <!-- ===== SERTIFIKAT VIEW (#3) ===== -->
+  <section class="screen" id="screen-cert">
+    <div class="cert-top">
+      <button class="close" id="cert-back" aria-label="Kembali">←</button>
+      <span style="font-family:'Fredoka';font-weight:600">Sertifikatmu</span>
+    </div>
+    <div class="cert-wrap">
+      <canvas id="cert-canvas" width="1000" height="700" style="width:100%;height:auto;border-radius:14px;box-shadow:var(--shadow)"></canvas>
+    </div>
+    <button class="btn" id="cert-download" style="margin-top:16px">⬇️ Unduh gambar (.png)</button>
+    <button class="btn ghost" id="cert-share" style="margin-top:10px">📤 Bagikan</button>
+  </section>
+
+  <!-- BOTTOM NAV -->
+  <nav class="nav" id="nav">
+    <button class="on" data-go="home"><span class="ic">🏡</span>Belajar</button>
+    <button data-go="profile"><span class="ic"><img src="img/Bao.png" class="bao bao-icon" style="width:28px;height:28px;object-fit:contain;display:inline-block;"></span>Profil</button>
+  </nav>
+</div>
+
+<!-- FOOTER CTA (lesson) -->
+<div class="footer-cta" id="footer-cta" style="display:none">
+  <div class="feedback" id="feedback"></div>
+  <button class="btn" id="check-btn" disabled>Periksa</button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   Kobo — kurikulum.
+   Sumber utama: lessons.json (dimuat saat aplikasi start).
+   Array di bawah adalah FALLBACK bawaan, dipakai bila lessons.json
+   gagal dimuat (mis. saat file dibuka langsung via file://).
+   Untuk menambah/mengubah materi, edit lessons.json — TIDAK perlu
+   menyentuh kode ini.
+   ============================================================ */
+let CURRICULUM = [
+  {
+    id:"u1", title:"Kenalan sama Koperasi", icon:"👋",
+    questions:[
+      {type:"mc", prompt:"Apa sih koperasi itu?",
+        hint:"Pilih definisi yang paling pas.",
+        bubble:"Halo! Aku Bao si Kerbau. Kita mulai dari dasar ya ",
+        options:[
+          "Badan usaha yang dimiliki & dijalankan bersama oleh anggotanya",
+          "Toko milik satu orang kaya di desa",
+          "Bank milik pemerintah pusat",
+          "Aplikasi belanja online"],
+        answer:0,
+        explain:"Koperasi dimiliki dan dikelola bersama oleh para anggotanya untuk kesejahteraan bersama."},
+      {type:"tf", prompt:"Benar atau salah?",
+        statement:"Di koperasi, setiap anggota punya 1 suara, tidak peduli besar simpanannya.",
+        bubble:"Ini prinsip penting koperasi lho!",
+        answer:true,
+        explain:"Betul. Prinsip 'satu anggota satu suara' membedakan koperasi dari PT yang suaranya tergantung jumlah saham."},
+      {type:"mc", prompt:"Tujuan utama koperasi adalah...",
+        hint:"Fokus pada siapa yang diuntungkan.",
+        options:[
+          "Menyejahterakan anggota dan masyarakat",
+          "Mengejar keuntungan sebesar-besarnya untuk pemilik tunggal",
+          "Mengalahkan koperasi lain",
+          "Menaikkan harga barang"],
+        answer:0,
+        explain:"Koperasi berorientasi pada kesejahteraan anggota, bukan menumpuk laba untuk segelintir pemilik."},
+      {type:"match", prompt:"Pasangkan istilah dengan artinya",
+        bubble:"Ketuk kiri lalu pasangannya di kanan 🔗",
+        pairs:[
+          {l:"Anggota", r:"Pemilik sekaligus pengguna koperasi"},
+          {l:"Pengurus", r:"Yang menjalankan koperasi sehari-hari"},
+          {l:"Rapat Anggota", r:"Pemegang kekuasaan tertinggi"}],
+        explain:"Rapat Anggota adalah forum tertinggi pengambilan keputusan di koperasi."}
+    ]
+  },
+  {
+    id:"u2", title:"Simpanan & Modal", icon:"🐓",
+    questions:[
+      {type:"mc", prompt:"Simpanan yang dibayar SEKALI saat pertama jadi anggota disebut...",
+        hint:"Sekali di awal, jadi 'tanda masuk'.",
+        bubble:"Ada 3 jenis simpanan utama. Yuk hafalkan!",
+        options:["Simpanan pokok","Simpanan wajib","Simpanan sukarela","Simpanan deposito"],
+        answer:0,
+        explain:"Simpanan pokok dibayar sekali saat mendaftar dan tidak bisa diambil selama jadi anggota."},
+      {type:"mc", prompt:"Simpanan yang dibayar RUTIN tiap periode disebut...",
+        options:["Simpanan wajib","Simpanan pokok","Simpanan hari raya","Simpanan emas"],
+        answer:0,
+        explain:"Simpanan wajib dibayar berkala (mis. bulanan) oleh setiap anggota."},
+      {type:"tf", prompt:"Benar atau salah?",
+        statement:"Simpanan sukarela boleh diambil sewaktu-waktu sesuai aturan koperasi.",
+        answer:true,
+        explain:"Benar. Simpanan sukarela bersifat fleksibel, mirip tabungan biasa."},
+      {type:"mc", prompt:"Modal koperasi yang berasal dari anggota disebut modal...",
+        options:["Sendiri","Pinjaman","Asing","Hibah negara"],
+        answer:0,
+        explain:"Modal sendiri bersumber dari simpanan anggota dan cadangan koperasi."}
+    ]
+  },
+  {
+    id:"u3", title:"Rahasia SHU", icon:"💰",
+    questions:[
+      {type:"mc", prompt:"SHU adalah singkatan dari...",
+        bubble:"Ini bagian yang ditunggu anggota tiap tahun 😄",
+        options:["Sisa Hasil Usaha","Surat Hak Usaha","Simpanan Hasil Untung","Sistem Hitung Uang"],
+        answer:0,
+        explain:"SHU = Sisa Hasil Usaha, yaitu keuntungan bersih koperasi dalam satu tahun buku."},
+      {type:"tf", prompt:"Benar atau salah?",
+        statement:"SHU dibagi berdasarkan jasa & partisipasi anggota, bukan sekadar besarnya modal.",
+        answer:true,
+        explain:"Benar. Anggota yang lebih aktif bertransaksi umumnya menerima SHU lebih besar — ini ciri khas koperasi."},
+      {type:"mc", prompt:"Jika kamu rajin belanja di koperasi, dampaknya ke SHU-mu...",
+        hint:"Partisipasi = porsi.",
+        options:["Cenderung lebih besar","Lebih kecil","Tidak ada hubungannya","SHU jadi hangus"],
+        answer:0,
+        explain:"Semakin besar partisipasi (transaksi) anggota, umumnya semakin besar bagian SHU-nya."},
+      {type:"mc", prompt:"Forum yang mengesahkan pembagian SHU adalah...",
+        options:["Rapat Anggota Tahunan (RAT)","Rapat RT","Sidang pengurus rahasia","Voting di media sosial"],
+        answer:0,
+        explain:"RAT mengesahkan laporan keuangan dan pembagian SHU setiap tahun."}
+    ]
+  },
+  {
+    id:"u4", title:"Koperasi Zaman Now", icon:"🚀",
+    questions:[
+      {type:"mc", prompt:"Manfaat digitalisasi koperasi untuk anggota muda adalah...",
+        bubble:"Babak terakhir! Kamu hampir jadi Sahabat Koperasi 🏆",
+        options:[
+          "Transaksi & cek simpanan lewat HP, transparan",
+          "Antri lebih lama",
+          "Tidak bisa lihat laporan",
+          "Harus datang ke kantor tiap hari"],
+        answer:0,
+        explain:"Digitalisasi membuat koperasi transparan dan mudah diakses generasi muda."},
+      {type:"tf", prompt:"Benar atau salah?",
+        statement:"Koperasi modern bisa punya unit usaha digital seperti marketplace produk anggota.",
+        answer:true,
+        explain:"Benar. Banyak koperasi kini membuka kanal digital untuk memasarkan produk anggotanya."},
+      {type:"match", prompt:"Pasangkan masalah dengan solusi digitalnya",
+        pairs:[
+          {l:"Catatan manual hilang", r:"Pembukuan digital"},
+          {l:"Susah lihat SHU", r:"Dashboard anggota online"},
+          {l:"Produk sepi pembeli", r:"Marketplace koperasi"}],
+        explain:"Teknologi menjawab masalah klasik koperasi: pencatatan, transparansi, dan pemasaran."},
+      {type:"mc", prompt:"Sikap Gen-Z ideal terhadap koperasi sebaiknya...",
+        options:[
+          "Aktif jadi anggota & ikut mengawasi",
+          "Cuek karena kuno",
+          "Hanya menabung tanpa peduli",
+          "Menunggu orang lain bergerak"],
+        answer:0,
+        explain:"Partisipasi aktif anak muda membuat koperasi tumbuh sehat dan transparan."}
+    ]
+  }
+];
+
+/* ============================================================
+   Mini-katalog koperasi.
+   Sumber utama: coops.json. Array di bawah = FALLBACK bawaan.
+   DATA DUMMY untuk demo — bukan data riil. Untuk produksi,
+   hubungkan ke sumber resmi/terverifikasi. Edit coops.json
+   untuk menambah koperasi tanpa menyentuh kode.
+   ============================================================ */
+let COOPS = [
+  {name:"Koperasi Maju Bersama", type:"Konsumen", area:"Tebet, Jakarta Selatan", services:["Sembako murah","Simpan pinjam","SHU tahunan"], member:"Terbuka untuk umum", emoji:"🏪"},
+  {name:"KSP Sejahtera Mandiri", type:"Simpan Pinjam", area:"Cawang, Jakarta Timur", services:["Tabungan anggota","Pinjaman modal usaha","Edukasi keuangan"], member:"Wajib simpanan pokok", emoji:"🐓"},
+  {name:"Koperasi Tani Subur", type:"Produsen", area:"Bogor, Jawa Barat", services:["Pupuk & bibit","Pemasaran hasil tani","Gudang bersama"], member:"Petani & umum", emoji:"🌾"},
+  {name:"Koperasi Digital Nusantara", type:"Jasa", area:"Online / Nasional", services:["Marketplace produk anggota","Dashboard SHU online","Kelas UMKM"], member:"Daftar via aplikasi", emoji:"💻"},
+  {name:"Koperasi Karyawan Bahagia", type:"Konsumen", area:"Sudirman, Jakarta Pusat", services:["Toko karyawan","Cicilan ringan","Voucher belanja"], member:"Khusus karyawan", emoji:"👔"},
+  {name:"Koperasi Wanita Berdaya", type:"Serba Usaha", area:"Depok, Jawa Barat", services:["Modal usaha mikro","Pelatihan keterampilan","Arisan produktif"], member:"Terbuka untuk wanita", emoji:"💪"},
+  {name:"Koperasi Pemuda Kreatif", type:"Jasa", area:"Bandung, Jawa Barat", services:["Coworking","Pendanaan ide kreatif","Komunitas wirausaha"], member:"Anak muda 17-35 th", emoji:"🚀"},
+  {name:"Koperasi Pasar Rakyat", type:"Konsumen", area:"Cikini, Jakarta Pusat", services:["Grosir murah","Timbangan jujur","Simpanan harian"], member:"Pedagang & umum", emoji:"🧺"}
+];
+
+const BADGES = [
+  {id:"first", icon:"🌱", name:"Langkah Pertama", need:s=>s.completed.length>=1},
+  {id:"half",  icon:"🔥", name:"Setengah Jalan", need:s=>s.completed.length>=2},
+  {id:"shu",   icon:"💰", name:"Paham SHU",      need:s=>s.completed.includes("u3")},
+  {id:"grad",  icon:"🏆", name:"Sahabat Koperasi", need:s=>s.completed.length>=CURRICULUM.length},
+  {id:"xp100", icon:"⭐", name:"Kolektor XP",    need:s=>s.xp>=100},
+];
+
+/* ---------- STATE + storage (aman jika localStorage diblokir) ---------- */
+const KEY="kobo_v1";
+const FALLBACK={};
+function load(){
+  try{const r=localStorage.getItem(KEY);return r?JSON.parse(r):null}
+  catch(e){return FALLBACK.data||null}
+}
+function save(){
+  try{localStorage.setItem(KEY,JSON.stringify(state))}
+  catch(e){FALLBACK.data=JSON.parse(JSON.stringify(state))}
+}
+let state = load() || {xp:0, streak:1, hearts:5, completed:[], lastDay:todayStr()};
+
+function todayStr(){return new Date().toISOString().slice(0,10)}
+// update streak sederhana berdasarkan hari kalender
+(function tickStreak(){
+  const t=todayStr();
+  if(state.lastDay!==t){
+    const diff=(new Date(t)-new Date(state.lastDay))/86400000;
+    state.streak = diff===1 ? state.streak+1 : (diff>1?1:state.streak);
+    state.lastDay=t;
+    if(state.hearts<5) state.hearts=5; // isi ulang nyawa tiap hari
+    save();
+  }
+})();
+
+/* ---------- helpers ---------- */
+const $=s=>document.querySelector(s);
+const $$=s=>[...document.querySelectorAll(s)];
+function toast(msg){const t=$("#toast");t.textContent=msg;t.classList.add("show");clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove("show"),1800)}
+function syncTop(){
+  $("#s-streak").textContent=state.streak;
+  $("#s-xp").textContent=state.xp;
+  $("#s-hearts").textContent=state.hearts;
+}
+function showScreen(id){
+  $$(".screen").forEach(s=>s.classList.remove("active"));
+  $("#screen-"+id).classList.add("active");
+  const inLesson = (id==="lesson");
+  $("#nav").classList.toggle("hidden", inLesson || id==="result");
+  $("#topbar").style.display = (inLesson) ? "none" : "flex";
+  $("#footer-cta").style.display = inLesson ? "block" : "none";
+  window.scrollTo(0,0);
+}
+
+/* ---------- HOME / path ---------- */
+function renderHome(){
+  syncTop();
+  const done=state.completed.length, total=CURRICULUM.length;
+  const pct=Math.round(done/total*100);
+  $("#home-progress").style.width=pct+"%";
+  $("#home-progress-txt").textContent=pct+"%";
+  if(done===0){$("#hero-title").textContent="Yuk, jadi anggota koperasi cerdas!";}
+  else if(done<total){$("#hero-title").textContent="Lanjutkan perjalananmu! 🔥";$("#hero-sub").textContent=`Tinggal ${total-done} pelajaran lagi menuju lencana 🏆`;}
+  else{$("#hero-title").textContent="Kamu Sahabat Koperasi! 🏆";$("#hero-sub").textContent="Semua pelajaran selesai. Ajak temanmu ikut belajar!";}
+
+  const path=$("#path");path.innerHTML="";
+  CURRICULUM.forEach((u,i)=>{
+    const isDone=state.completed.includes(u.id);
+    const isUnlocked = i===0 || state.completed.includes(CURRICULUM[i-1].id);
+    const isCurrent = isUnlocked && !isDone;
+    const row=document.createElement("div");row.className="node-row";
+    const btn=document.createElement("button");
+    btn.className="node"+(isDone?" done":"")+(!isUnlocked?" locked":"")+(isCurrent?" current":"");
+    btn.innerHTML = isDone ? "✓" : (isUnlocked ? u.icon : "🔒");
+    const cap=document.createElement("span");cap.className="cap";cap.textContent=u.title;
+    btn.appendChild(cap);
+    btn.onclick=()=>{ if(!isUnlocked){toast("Selesaikan pelajaran sebelumnya dulu 😉");return;} startLesson(i); };
+    row.appendChild(btn);path.appendChild(row);
+  });
+}
+
+/* ---------- LESSON engine ---------- */
+let L=null; // lesson runtime
+function startLesson(idx){
+  if(state.hearts<=0){toast("Nyawa habis! Datang lagi besok ya ❤️");return;}
+  const unit=CURRICULUM[idx];
+  L={idx, unit, qi:0, correct:0, total:unit.questions.length, answered:false, selected:null, matchState:null};
+  $("#lesson-hearts").textContent=state.hearts;
+  showScreen("lesson");
+  renderQuestion();
+}
+function renderQuestion(){
+  L.answered=false;L.selected=null;L.matchState=null;
+  const q=L.unit.questions[L.qi];
+  $("#lesson-bar").style.width=(L.qi/L.total*100)+"%";
+  $("#lesson-hearts").textContent=state.hearts;
+  const fb=$("#feedback");fb.className="feedback";fb.innerHTML="";
+  const chk=$("#check-btn");chk.disabled=true;chk.textContent="Periksa";chk.className="btn";
+  chk.onclick=submitAnswer;
+
+  const area=$("#q-area");area.innerHTML="";
+  const bubble = q.bubble ? `<div class="speech"><div class="ava"><img src="img/BaoTabungan.png" class="bao bao-icon" style="width:90px;height:90px;object-fit:contain;display:inline-block;"></div><div class="bubble">${q.bubble}</div></div>`:"";
+  let body="";
+
+  if(q.type==="mc"){
+    body=`<div class="q-prompt">${q.prompt}</div>${q.hint?`<div class="q-hint">${q.hint}</div>`:""}${bubble}
+      <div class="options">${q.options.map((o,i)=>`<button class="opt" data-i="${i}">${o}</button>`).join("")}</div>`;
+    area.innerHTML=body;
+    $$("#q-area .opt").forEach(b=>b.onclick=()=>{
+      if(L.answered)return;
+      $$("#q-area .opt").forEach(x=>x.classList.remove("sel"));
+      b.classList.add("sel");L.selected=+b.dataset.i;chk.disabled=false;
+    });
+  }
+  else if(q.type==="tf"){
+    body=`<div class="q-prompt">${q.prompt}</div>${bubble}
+      <div class="speech" style="margin-top:-6px"><div class="ava">📌</div><div class="bubble">${q.statement}</div></div>
+      <div class="options">
+        <button class="opt" data-v="true">✅ Benar</button>
+        <button class="opt" data-v="false">❌ Salah</button>
+      </div>`;
+    area.innerHTML=body;
+    $$("#q-area .opt").forEach(b=>b.onclick=()=>{
+      if(L.answered)return;
+      $$("#q-area .opt").forEach(x=>x.classList.remove("sel"));
+      b.classList.add("sel");L.selected=(b.dataset.v==="true");chk.disabled=false;
+    });
+  }
+  else if(q.type==="match"){
+    const lefts=q.pairs.map((p,i)=>({...p,i}));
+    const rights=shuffle(q.pairs.map((p,i)=>({txt:p.r,i})));
+    L.matchState={picksL:null,done:{},correctCount:0,total:q.pairs.length};
+    body=`<div class="q-prompt">${q.prompt}</div>${bubble}
+      <div class="match-grid">
+        <div class="match-col" id="col-l">${lefts.map(p=>`<button class="opt" data-side="l" data-i="${p.i}">${p.l}</button>`).join("")}</div>
+        <div class="match-col" id="col-r">${rights.map(p=>`<button class="opt" data-side="r" data-i="${p.i}">${p.txt}</button>`).join("")}</div>
+      </div>`;
+    area.innerHTML=body;
+    chk.textContent="Lewati";chk.disabled=false; // check enabled; will only finish when all matched
+    chk.onclick=()=>{ // for match, "submit" only allowed once all paired
+      if(Object.keys(L.matchState.done).length<L.matchState.total){toast("Pasangkan semua dulu ya 🔗");return;}
+      submitAnswer();
+    };
+    $$("#q-area .opt").forEach(b=>b.onclick=()=>handleMatchPick(b,q));
+  }
+}
+
+function handleMatchPick(btn,q){
+  const ms=L.matchState;const side=btn.dataset.side;const i=+btn.dataset.i;
+  if(btn.classList.contains("correct"))return;
+  if(side==="l"){
+    $$('#col-l .opt').forEach(x=>x.classList.remove("sel"));
+    btn.classList.add("sel");ms.picksL=i;
+  }else{
+    if(ms.picksL==null){toast("Pilih istilah di kiri dulu");return;}
+    const leftBtn=$(`#col-l .opt[data-i="${ms.picksL}"]`);
+    if(ms.picksL===i){
+      btn.classList.add("correct");leftBtn.classList.add("correct");
+      btn.disabled=true;leftBtn.disabled=true;
+      ms.done[i]=true;ms.correctCount++;
+      leftBtn.classList.remove("sel");ms.picksL=null;
+      if(Object.keys(ms.done).length===ms.total){toast("Semua cocok! Tekan Lewati ✅");}
+    }else{
+      btn.classList.add("wrong");leftBtn.classList.add("wrong");
+      setTimeout(()=>{btn.classList.remove("wrong");leftBtn.classList.remove("wrong","sel");ms.picksL=null;},600);
+    }
+  }
+}
+
+function submitAnswer(){
+  const q=L.unit.questions[L.qi];
+  let ok=false;
+  if(q.type==="mc"){ok=(L.selected===q.answer);markMC(q);}
+  else if(q.type==="tf"){ok=(L.selected===q.answer);markTF(q);}
+  else if(q.type==="match"){ok=(L.matchState.correctCount===L.matchState.total);}
+  L.answered=true;
+  const fb=$("#feedback");
+  if(ok){L.correct++;fb.className="feedback ok";fb.innerHTML=`✅ Tepat!<small>${q.explain||""}</small>`;}
+  else{
+    state.hearts=Math.max(0,state.hearts-1);save();syncTop();
+    $("#lesson-hearts").textContent=state.hearts;
+    fb.className="feedback no";fb.innerHTML=`❌ Belum tepat.<small>${q.explain||""}</small>`;
+  }
+  const chk=$("#check-btn");
+  chk.className="btn"+(ok?"":" coral");
+  chk.disabled=false;chk.textContent=(L.qi<L.total-1)?"Lanjut":"Selesai";
+  chk.onclick=nextQuestion;
+  if(state.hearts<=0 && !ok){chk.textContent="Nyawa habis 😢";}
+}
+function markMC(q){$$("#q-area .opt").forEach(b=>{b.disabled=true;const i=+b.dataset.i;if(i===q.answer)b.classList.add("correct");else if(i===L.selected)b.classList.add("wrong");});}
+function markTF(q){$$("#q-area .opt").forEach(b=>{b.disabled=true;const v=(b.dataset.v==="true");if(v===q.answer)b.classList.add("correct");else if(v===L.selected)b.classList.add("wrong");});}
+
+function nextQuestion(){
+  if(state.hearts<=0 && L.correct<L.total){ // gagal karena nyawa habis
+    showScreen("home");renderHome();
+    toast("Nyawa habis. Coba lagi nanti ya ❤️");
+    return;
+  }
+  L.qi++;
+  if(L.qi>=L.total){finishLesson();return;}
+  renderQuestion();
+}
+
+function finishLesson(){
+  $("#lesson-bar").style.width="100%";
+  const acc=Math.round(L.correct/L.total*100);
+  const gained=L.correct*10 + (acc===100?15:0);
+  state.xp+=gained;
+  if(!state.completed.includes(L.unit.id)) state.completed.push(L.unit.id);
+  state.lastUnit=L.unit.id;
+  checkBadges();
+  save();syncTop();
+  $("#result-emoji").textContent = acc===100 ? "🏆" : "🎉";
+  $("#result-title").textContent = acc===100 ? "Sempurna!" : "Pelajaran selesai!";
+  $("#result-sub").textContent = acc===100 ? "Semua benar. Kamu hebat!" : "Terus berlatih, kamu makin jago!";
+  $("#result-xp").textContent="+"+gained;
+  $("#result-acc").textContent=acc+"%";
+  updateBridge();
+  showScreen("result");
+}
+
+let newBadges=[];
+function checkBadges(){
+  state.badges=state.badges||[];
+  BADGES.forEach(b=>{if(!state.badges.includes(b.id) && b.need(state)){state.badges.push(b.id);newBadges.push(b);}});
+}
+
+/* ---------- PROFILE ---------- */
+function renderProfile(){
+  syncTop();
+  $("#p-streak").textContent=state.streak;
+  $("#p-xp").textContent=state.xp;
+  $("#p-done").textContent=state.completed.length;
+  const rank = state.completed.length>=CURRICULUM.length?"Sahabat Koperasi 🏆"
+            : state.completed.length>=2?"Anggota Aktif"
+            : state.xp>0?"Pelajar":"Pemula";
+  $("#prof-rank").textContent="Tingkat: "+rank;
+  const wrap=$("#badges");wrap.innerHTML="";
+  state.badges=state.badges||[];
+  BADGES.forEach(b=>{
+    const got=state.badges.includes(b.id);
+    const el=document.createElement("div");el.className="badge"+(got?" unlocked":"");
+    el.innerHTML=`<div class="ring">${got?b.icon:"🔒"}</div>${b.name}`;
+    wrap.appendChild(el);
+  });
+  // status kartu sertifikat (#3)
+  const allDone = state.completed.length>=CURRICULUM.length;
+  const card=$("#cert-card"), nameInp=$("#cert-name"), makeBtn=$("#cert-make");
+  card.classList.toggle("locked", !allDone);
+  if(allDone){
+    $("#cert-status").textContent="Selamat! Kamu sudah menyelesaikan semua pelajaran. Buat sertifikatmu 🎉";
+    nameInp.disabled=false;
+    makeBtn.disabled = !nameInp.value.trim();
+  }else{
+    $("#cert-status").textContent=`Selesaikan semua ${CURRICULUM.length} pelajaran untuk membuka sertifikat. (${state.completed.length}/${CURRICULUM.length})`;
+    nameInp.disabled=true; makeBtn.disabled=true;
+  }
+}
+
+/* ---------- utils ---------- */
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+
+/* ---------- nav + events ---------- */
+$$("#nav button").forEach(b=>b.onclick=()=>{
+  $$("#nav button").forEach(x=>x.classList.remove("on"));b.classList.add("on");
+  const go=b.dataset.go;showScreen(go);
+  if(go==="home")renderHome();if(go==="profile")renderProfile();
+});
+$("#lesson-quit").onclick=()=>{if(confirm("Keluar dari pelajaran? Progres ronde ini tidak tersimpan."))
+  {showScreen("home");renderHome();$$("#nav button").forEach(x=>x.classList.remove("on"));$('#nav button[data-go="home"]').classList.add("on");}};
+$("#result-continue").onclick=()=>{
+  showScreen("home");renderHome();
+  $$("#nav button").forEach(x=>x.classList.remove("on"));$('#nav button[data-go="home"]').classList.add("on");
+  if(newBadges.length){toast("Lencana baru: "+newBadges.map(b=>b.icon+" "+b.name).join(", "));newBadges=[];}
+};
+$("#reset-btn").onclick=()=>{if(confirm("Yakin reset semua progres? Tindakan ini tidak bisa dibatalkan.")){
+  state={xp:0,streak:1,hearts:5,completed:[],badges:[],lastDay:todayStr()};save();renderProfile();toast("Progres direset 🔄");}};
+
+/* ============================================================
+   #1 — JEMBATAN KE AKSI NYATA: katalog koperasi
+   ============================================================ */
+const UNIT_HINT = {
+  u1:{title:"Sudah kenal koperasi? Saatnya temukan yang nyata!", sub:"Cari koperasi di dekatmu dan mulai jadi anggota."},
+  u2:{title:"Paham simpanan? Yuk mulai menabung beneran!", sub:"Koperasi simpan pinjam ini menerima anggota baru."},
+  u3:{title:"Sudah ngerti SHU? Nikmati langsung sebagai anggota!", sub:"Bergabung, bertransaksi, dan dapat bagian SHU-mu."},
+  u4:{title:"Siap jadi anggota koperasi digital?", sub:"Koperasi modern ini bisa kamu ikuti dari HP."}
+};
+function openCoops(){
+  $("#coop-search").value="";
+  renderCoops("");
+  showScreen("coops");
+}
+function renderCoops(q){
+  q=(q||"").toLowerCase().trim();
+  const list=$("#coop-list");list.innerHTML="";
+  const filtered=COOPS.filter(c=>{
+    if(!q)return true;
+    return (c.name+" "+c.type+" "+c.area+" "+c.services.join(" ")).toLowerCase().includes(q);
+  });
+  if(!filtered.length){list.innerHTML=`<div class="coop-empty">😕 Tidak ada koperasi yang cocok dengan "<b>${q}</b>".<br>Coba kata kunci lain.</div>`;return;}
+  filtered.forEach(c=>{
+    const el=document.createElement("div");el.className="coop";
+    el.innerHTML=`
+      <div class="ce">${c.emoji}</div>
+      <div class="ci">
+        <h4>${c.name}</h4>
+        <div class="meta">📍 ${c.area} • ${c.type}</div>
+        <div class="tags">${c.services.map(s=>`<span class="tag">${s}</span>`).join("")}</div>
+        <div class="member">👥 ${c.member}</div>
+        <button class="coop-join">Lihat & gabung</button>
+      </div>`;
+    el.querySelector(".coop-join").onclick=()=>toast("Demo: di versi nyata, ini membuka info pendaftaran koperasi 😊");
+    list.appendChild(el);
+  });
+}
+$("#result-find").onclick=()=>{
+  const h=UNIT_HINT[state.lastUnit]||{title:"Temukan koperasi di dekatmu",sub:""};
+  $("#bridge-title") && ( $("#bridge-title").textContent=h.title );
+  openCoops();
+};
+$("#coops-back").onclick=()=>{ showScreen("home");renderHome();
+  $$("#nav button").forEach(x=>x.classList.remove("on"));$('#nav button[data-go="home"]').classList.add("on"); };
+$("#coop-search").oninput=e=>renderCoops(e.target.value);
+
+// sesuaikan teks bridge dengan unit terakhir, dipanggil saat result tampil
+function updateBridge(){
+  const h=UNIT_HINT[state.lastUnit];
+  if(h){ $("#bridge-title").textContent=h.title; $("#bridge-sub").textContent=h.sub; }
+}
+
+/* ============================================================
+   #3 — SERTIFIKAT KELULUSAN (digambar ke canvas, bisa diunduh)
+   ============================================================ */
+$("#cert-name").oninput=e=>{ $("#cert-make").disabled = !e.target.value.trim(); };
+$("#cert-make").onclick=()=>{
+  const nm=$("#cert-name").value.trim();
+  if(!nm)return;
+  state.certName=nm;save();
+  drawCertificate(nm);
+  showScreen("cert");
+};
+$("#cert-back").onclick=()=>{ showScreen("profile");renderProfile(); };
+
+function drawCertificate(name){
+  const cv=$("#cert-canvas"),x=cv.getContext("2d"),W=cv.width,H=cv.height;
+  // latar
+  x.fillStyle="#FFF8EE";x.fillRect(0,0,W,H);
+  // bingkai ganda
+  x.strokeStyle="#C8772E";x.lineWidth=10;x.strokeRect(26,26,W-52,H-52);
+  x.strokeStyle="#3FA34D";x.lineWidth=3;x.strokeRect(44,44,W-88,H-88);
+  // sudut motif
+  x.fillStyle="#F4B740";
+  [[60,60],[W-60,60],[60,H-60],[W-60,H-60]].forEach(p=>{x.beginPath();x.arc(p[0],p[1],9,0,7);x.fill();});
+  const cx=W/2;
+  x.textAlign="center";
+  x.fillStyle="#C8772E";x.font="700 40px Fredoka, sans-serif";
+  x.fillText("🐃 Kobo", cx, 130);
+  x.fillStyle="#8A7B66";x.font="600 22px 'Plus Jakarta Sans', sans-serif";
+  x.fillText("SERTIFIKAT KELULUSAN", cx, 175);
+  x.fillStyle="#2B2118";x.font="400 20px 'Plus Jakarta Sans', sans-serif";
+  x.fillText("Dengan bangga diberikan kepada", cx, 250);
+  // nama
+  x.fillStyle="#2E7D3A";x.font="700 56px Fredoka, sans-serif";
+  x.fillText(name, cx, 320);
+  x.strokeStyle="#E7D8BF";x.lineWidth=2;x.beginPath();x.moveTo(cx-220,340);x.lineTo(cx+220,340);x.stroke();
+  // teks
+  x.fillStyle="#2B2118";x.font="400 19px 'Plus Jakarta Sans', sans-serif";
+  x.fillText("telah menyelesaikan seluruh pelajaran literasi koperasi", cx, 390);
+  x.fillText("dan resmi menyandang gelar", cx, 420);
+  x.fillStyle="#C8772E";x.font="700 34px Fredoka, sans-serif";
+  x.fillText("🏆 Sahabat Koperasi", cx, 470);
+  // footer
+  x.fillStyle="#8A7B66";x.font="400 16px 'Plus Jakarta Sans', sans-serif";
+  const d=new Date().toLocaleDateString("id-ID",{day:"numeric",month:"long",year:"numeric"});
+  x.fillText("Diterbitkan: "+d, cx, 545);
+  x.fillText("Total XP: "+state.xp+"  •  Streak: "+state.streak+" hari", cx, 575);
+  x.font="italic 14px 'Plus Jakarta Sans', sans-serif";
+  x.fillStyle="#B9A98E";
+  x.fillText("Sertifikat demo — Digital Cooperatives Expo 2026", cx, 640);
+}
+$("#cert-download").onclick=()=>{
+  const cv=$("#cert-canvas");
+  try{
+    const a=document.createElement("a");
+    a.download="Sertifikat-Kobo-"+(state.certName||"Sahabat").replace(/\s+/g,"_")+".png";
+    a.href=cv.toDataURL("image/png");a.click();
+    toast("Sertifikat diunduh ⬇️");
+  }catch(e){toast("Gagal mengunduh di browser ini 😢");}
+};
+$("#cert-share").onclick=async()=>{
+  const cv=$("#cert-canvas");
+  try{
+    if(navigator.share && cv.toBlob){
+      cv.toBlob(async b=>{
+        const file=new File([b],"sertifikat-kobo.png",{type:"image/png"});
+        try{ await navigator.share({title:"Sertifikat Kobo",text:"Aku resmi jadi Sahabat Koperasi! 🏆",files:[file]}); }
+        catch(_){ toast("Bagikan dibatalkan"); }
+      });
+    }else{ toast("Browser ini belum mendukung share langsung. Unduh saja gambarnya 😊"); }
+  }catch(e){ toast("Tidak bisa membagikan di browser ini"); }
+};
+
+/* ============================================================
+   INIT — muat konten dari JSON eksternal, lalu render.
+   Strategi:
+   1. Coba fetch lessons.json & coops.json (sumber utama).
+   2. Jika gagal (mis. dibuka via file://, atau file tak ada),
+      pakai data fallback bawaan yang sudah ada di CURRICULUM/COOPS.
+   Aplikasi selalu jalan — tidak pernah kosong.
+   ============================================================ */
+async function loadContent(){
+  let note="";
+  try{
+    const [lr,cr]=await Promise.all([
+      fetch("lessons.json",{cache:"no-store"}),
+      fetch("coops.json",{cache:"no-store"})
+    ]);
+    if(lr.ok){
+      const data=await lr.json();
+      if(Array.isArray(data)&&data.length) CURRICULUM=data;
+    } else note="lessons.json tidak ditemukan";
+    if(cr.ok){
+      const data=await cr.json();
+      if(Array.isArray(data)&&data.length) COOPS=data;
+    }
+  }catch(e){
+    // file:// memblokir fetch, atau JSON tidak valid → diam-diam pakai fallback
+    note="memakai data bawaan (JSON tak termuat)";
+    console.warn("Kobo: gagal memuat JSON, memakai fallback bawaan.", e);
+  }
+  return note;
+}
+
+(async function init(){
+  state.badges=state.badges||[];
+  const note=await loadContent();
+  syncTop();renderHome();showScreen("home");
+  if(note) console.info("Kobo:",note);
+})();
+</script>
+</body>
+</html>
