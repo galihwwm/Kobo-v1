@@ -1,4 +1,4 @@
-# 🌾🐃 KOBO — Belajar Koperasi Bersama Bao
+# KOBO — Belajar Koperasi Bareng Bao di Kerbau
 
 Aplikasi gamifikasi literasi koperasi yang dikembangkan untuk
 **Hackathon Digital Cooperatives Expo 2026 — Pilar 4: Literasi Gen-Z & Gen-Alpha dalam Berkoperasi**.
@@ -44,7 +44,7 @@ berhenti pada literasi, tetapi mendorong partisipasi nyata: dari *belajar -> pah
   dorongan untuk "ikut bergabung".
 - **🎓 Sertifikat kelulusan**: setelah semua unit selesai, pengguna membuat sertifikat ber-nama dengan
   gelar "Sahabat Koperasi" yang bisa diunduh (.png) dan dibagikan ke media sosial.
-- **Maskot "Bao" 🐃** — Bao si kerbau memandu dan memberi umpan balik tiap soal. Kerbau dipilih sebagai
+- **Maskot "Bao"** — Bao si kerbau memandu dan memberi umpan balik tiap soal. Kerbau dipilih sebagai
   simbol kerja keras dan gotong royong yang identik dengan pertanian Indonesia — sekaligus pembeda dari
   aplikasi belajar lain.
 - **Progres tersimpan otomatis** di perangkat (localStorage) — lanjut kapan saja.
