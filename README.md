@@ -1,9 +1,9 @@
-# 🌾🐃 Kobo — Belajar Koperasi Bersama Bao
+# 🌾🐃 KOBO — Belajar Koperasi Bersama Bao
 
 Aplikasi gamifikasi literasi koperasi yang dikembangkan untuk
 **Hackathon Digital Cooperatives Expo 2026 — Pilar 4: Literasi Gen-Z & Gen-Alpha dalam Berkoperasi**.
 
-Kobo mengajarkan materi dasar-dasar koperasi (definisi, simpanan, SHU, hingga koperasi digital)
+KOBO mengajarkan materi dasar-dasar koperasi (definisi, simpanan, SHU, hingga koperasi digital)
 dengan format yang akrab bagi generasi muda: pelajaran singkat, kuis interaktif, XP, streak,
 nyawa (hearts), dan lencana.
 
@@ -17,19 +17,19 @@ nyawa (hearts), dan lencana.
 
 | Peran | Nama |
 |-------|------|
-| Nama Tim | _(CIA-14)_ |
-| Ketua | _(Galih Wening Werdi Mukti)_ |
-| Anggota 1 | _(Asriza Yolanda)_ |
-| Anggota 2 | _(Monike Febrianti)_ |
+| Nama Tim | _CIA-14_ |
+| Ketua | _Galih Wening Werdi Mukti_ |
+| Anggota 1 | _Asriza Yolanda_ |
+| Anggota 2 | _Monike Febrianti_ |
 
 ---
 
 ## 🎯 Relevansi dengan Tema Pilar 4
 
-Pilar 4 menyoroti **literasi Gen-Z & Gen-Alpha dalam berkoperasi**. Kobo menjawabnya dengan dua cara:
+Pilar 4 menyoroti **literasi Gen-Z & Gen-Alpha dalam berkoperasi**. KOBO menjawabnya dengan dua cara:
 pertama, **gamifikasi** mengubah materi koperasi yang sering dianggap kuno menjadi pengalaman belajar
 yang ringan dan menyenangkan, sesuai kebiasaan digital generasi muda. Kedua, **jembatan ke aksi nyata** —
-usai belajar, pengguna langsung diarahkan ke daftar koperasi yang bisa diikuti. Dengan begitu Kobo tidak
+usai belajar, pengguna langsung diarahkan ke daftar koperasi yang bisa diikuti. Dengan begitu KOBO tidak
 berhenti pada literasi, tetapi mendorong partisipasi nyata: dari *belajar -> paham -> bergabung*.
 
 ---
@@ -51,12 +51,12 @@ berhenti pada literasi, tetapi mendorong partisipasi nyata: dari *belajar -> pah
 - **100% offline & tanpa backend** — cukup file statis.
 - **Responsif** (mobile-first) dan mendukung `prefers-reduced-motion`.
 
-## 🆚 Yang Membedakan Kobo
+## 🆚 Yang Membedakan KOBO
 
-Aplikasi belajar gamifikasi pada umumnya berhenti pada penyampaian teori. Kobo melangkah lebih jauh
+Aplikasi belajar gamifikasi pada umumnya berhenti pada penyampaian teori. KOBO melangkah lebih jauh
 dengan **menghubungkan edukasi ke aksi nyata**: di akhir tiap pelajaran, pengguna disuguhi daftar koperasi
 beserta jenis, lokasi, layanan, dan syarat keanggotaan yang bisa dicari dan disaring. Inilah inti
-diferensiasi Kobo — pengetahuan baru langsung dikaitkan dengan peluang konkret untuk menjadi anggota koperasi.
+diferensiasi KOBO — pengetahuan baru langsung dikaitkan dengan peluang konkret untuk menjadi anggota koperasi.
 
 ## 🚀 Cara Menjalankan
 
